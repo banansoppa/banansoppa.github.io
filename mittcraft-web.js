@@ -76,7 +76,7 @@ var ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIR
 
 // --pre-jses are emitted after the Module integration code, so that they can
 // refer to Module (if they choose; they can also define Module)
-// include: /tmp/tmp_ngu8uf7.js
+// include: /tmp/tmpxn_e3ee9.js
 
   if (!Module['expectedDataFileDownloads']) Module['expectedDataFileDownloads'] = 0;
   Module['expectedDataFileDownloads']++;
@@ -199,25 +199,25 @@ var ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIR
     }
 
     }
-    loadPackage({"files": [{"filename": "/block_shader.fs", "start": 0, "end": 1455}, {"filename": "/block_shader.vs", "start": 1455, "end": 2042}, {"filename": "/blocks.bmp", "start": 2042, "end": 67716}, {"filename": "/crafting_interface.bmp", "start": 67716, "end": 116430}, {"filename": "/crafting_table_interface.bmp", "start": 116430, "end": 199816}, {"filename": "/furnace.bmp", "start": 199816, "end": 341962}, {"filename": "/hotbar.bmp", "start": 341962, "end": 369556}, {"filename": "/inventory.bmp", "start": 369556, "end": 708418}, {"filename": "/items.bmp", "start": 708418, "end": 774092}, {"filename": "/skybox.bmp", "start": 774092, "end": 1734230}, {"filename": "/skybox.fs", "start": 1734230, "end": 1734651}, {"filename": "/skybox.vs", "start": 1734651, "end": 1735216}, {"filename": "/uv-layout.png", "start": 1735216, "end": 1735764}, {"filename": "/zombie.glb", "start": 1735764, "end": 1761624}], "remote_package_size": 1761624});
+    loadPackage({"files": [{"filename": "/block_shader.fs", "start": 0, "end": 3908}, {"filename": "/block_shader.vs", "start": 3908, "end": 4936}, {"filename": "/blocks.bmp", "start": 4936, "end": 70610}, {"filename": "/depth_shader.fs", "start": 70610, "end": 71200}, {"filename": "/depth_shader.vs", "start": 71200, "end": 71466}, {"filename": "/gui-spritesheet.bmp", "start": 71466, "end": 792168}, {"filename": "/items.bmp", "start": 792168, "end": 857842}, {"filename": "/skybox.bmp", "start": 857842, "end": 1817980}, {"filename": "/skybox.fs", "start": 1817980, "end": 1818401}, {"filename": "/skybox.vs", "start": 1818401, "end": 1818966}, {"filename": "/uv-layout.png", "start": 1818966, "end": 1819514}, {"filename": "/zombie.glb", "start": 1819514, "end": 1845374}], "remote_package_size": 1845374});
 
   })();
 
-// end include: /tmp/tmp_ngu8uf7.js
-// include: /tmp/tmp02b78tgr.js
+// end include: /tmp/tmpxn_e3ee9.js
+// include: /tmp/tmpq8tedyu9.js
 
     // All the pre-js content up to here must remain later on, we need to run
     // it.
     if ((typeof ENVIRONMENT_IS_WASM_WORKER != 'undefined' && ENVIRONMENT_IS_WASM_WORKER) || (typeof ENVIRONMENT_IS_PTHREAD != 'undefined' && ENVIRONMENT_IS_PTHREAD) || (typeof ENVIRONMENT_IS_AUDIO_WORKLET != 'undefined' && ENVIRONMENT_IS_AUDIO_WORKLET)) Module['preRun'] = [];
     var necessaryPreJSTasks = Module['preRun'].slice();
-  // end include: /tmp/tmp02b78tgr.js
-// include: /tmp/tmpf7nq5ang.js
+  // end include: /tmp/tmpq8tedyu9.js
+// include: /tmp/tmpq1k1dheu.js
 
     if (!Module['preRun']) throw 'Module.preRun should exist because file support used it; did a pre-js delete it?';
     necessaryPreJSTasks.forEach((task) => {
       if (Module['preRun'].indexOf(task) < 0) throw 'All preRun tasks that exist before user pre-js code should remain after; did you replace Module or modify Module.preRun?';
     });
-  // end include: /tmp/tmpf7nq5ang.js
+  // end include: /tmp/tmpq1k1dheu.js
 
 
 var programArgs = [];
@@ -1073,6 +1073,8 @@ async function createWasm() {
     };
   var ___assert_fail = (condition, filename, line, func) =>
       abort(`Assertion failed: ${UTF8ToString(condition)}, at: ` + [filename ? UTF8ToString(filename) : 'unknown filename', line, func ? UTF8ToString(func) : 'unknown function']);
+
+  var ___call_sighandler = (fp, sig) => ((a1) => dynCall_vi(fp, a1))(sig);
 
   var PATH = {
   isAbs:(path) => path.charAt(0) === '/',
@@ -4097,6 +4099,12 @@ var stringToUTF8Array = (str, heap, outIdx, maxBytesToWrite) => {
   var __abort_js = () =>
       abort('native code called abort()');
 
+  var runtimeKeepaliveCounter = 0;
+  var __emscripten_runtime_keepalive_clear = () => {
+      noExitRuntime = false;
+      runtimeKeepaliveCounter = 0;
+    };
+
   var _emscripten_get_now = () => performance.now();
   
   var _emscripten_date_now = () => Date.now();
@@ -4186,6 +4194,35 @@ var stringToUTF8Array = (str, heap, outIdx, maxBytesToWrite) => {
       return runEmAsmFunction(code, sigPtr, argbuf);
     };
 
+
+  var maybeCStringToJsString = (cString) => {
+      // 'cString > 2' checks if the input is a number, and isn't of the special
+      // values we accept here, EMSCRIPTEN_EVENT_TARGET_* (which map to 0, 1, 2).
+      // In other words, if cString > 2 then it's a pointer to a valid place in
+      // memory, and points to a C string.
+      return cString > 2 ? UTF8ToString(cString) : cString;
+    };
+  
+  /** @type {Object} */
+  var specialHTMLTargets = [0, globalThis.document ?? 0, globalThis.window ?? 0];
+  var findEventTarget = (target) => {
+      target = maybeCStringToJsString(target);
+      var domElement = specialHTMLTargets[target] || globalThis.document?.querySelector(target);
+      return domElement;
+    };
+  
+  var getBoundingClientRect = (e) => specialHTMLTargets.indexOf(e) < 0 ? e.getBoundingClientRect() : {'left':0,'top':0};
+  
+  var _emscripten_get_element_css_size = (target, width, height) => {
+      target = findEventTarget(target);
+      if (!target) return -4;
+  
+      var rect = getBoundingClientRect(target);
+      HEAPF64[((width)>>3)] = rect.width;
+      HEAPF64[((height)>>3)] = rect.height;
+  
+      return 0;
+    };
 
   var onExits = [];
   var addOnExit = (cb) => onExits.push(cb);
@@ -4323,57 +4360,6 @@ var stringToUTF8Array = (str, heap, outIdx, maxBytesToWrite) => {
          ;
       },
   };
-  
-  var requestPointerLock = (target) => {
-      if (target.requestPointerLock) {
-        target.requestPointerLock();
-      } else {
-        // document.body is known to accept pointer lock, so use that to differentiate if the user passed a bad element,
-        // or if the whole browser just doesn't support the feature.
-        if (document.body.requestPointerLock) {
-          return -3;
-        }
-        return -1;
-      }
-      return 0;
-    };
-  var _emscripten_exit_pointerlock = () => {
-      // Make sure no queued up calls will fire after this.
-      JSEvents.removeDeferredCalls(requestPointerLock);
-      if (!document.exitPointerLock) return -1;
-      document.exitPointerLock();
-      return 0;
-    };
-
-  var maybeCStringToJsString = (cString) => {
-      // 'cString > 2' checks if the input is a number, and isn't of the special
-      // values we accept here, EMSCRIPTEN_EVENT_TARGET_* (which map to 0, 1, 2).
-      // In other words, if cString > 2 then it's a pointer to a valid place in
-      // memory, and points to a C string.
-      return cString > 2 ? UTF8ToString(cString) : cString;
-    };
-  
-  /** @type {Object} */
-  var specialHTMLTargets = [0, globalThis.document ?? 0, globalThis.window ?? 0];
-  var findEventTarget = (target) => {
-      target = maybeCStringToJsString(target);
-      var domElement = specialHTMLTargets[target] || globalThis.document?.querySelector(target);
-      return domElement;
-    };
-  
-  var getBoundingClientRect = (e) => specialHTMLTargets.indexOf(e) < 0 ? e.getBoundingClientRect() : {'left':0,'top':0};
-  
-  var _emscripten_get_element_css_size = (target, width, height) => {
-      target = findEventTarget(target);
-      if (!target) return -4;
-  
-      var rect = getBoundingClientRect(target);
-      HEAPF64[((width)>>3)] = rect.width;
-      HEAPF64[((height)>>3)] = rect.height;
-  
-      return 0;
-    };
-
   
   
   
@@ -6322,6 +6308,19 @@ var stringToUTF8Array = (str, heap, outIdx, maxBytesToWrite) => {
 
   var _emscripten_glViewport = (x0, x1, x2, x3) => GLctx.viewport(x0, x1, x2, x3);
 
+  var requestPointerLock = (target) => {
+      if (target.requestPointerLock) {
+        target.requestPointerLock();
+      } else {
+        // document.body is known to accept pointer lock, so use that to differentiate if the user passed a bad element,
+        // or if the whole browser just doesn't support the feature.
+        if (document.body.requestPointerLock) {
+          return -3;
+        }
+        return -1;
+      }
+      return 0;
+    };
   
   
   var _emscripten_request_pointerlock = (target, deferUntilInEventHandler) => {
@@ -6897,7 +6896,6 @@ var stringToUTF8Array = (str, heap, outIdx, maxBytesToWrite) => {
     };
   
   
-  var runtimeKeepaliveCounter = 0;
   var keepRuntimeAlive = () => noExitRuntime || runtimeKeepaliveCounter > 0;
   var _proc_exit = (code) => {
       EXITSTATUS = code;
@@ -7543,6 +7541,8 @@ var stringToUTF8Array = (str, heap, outIdx, maxBytesToWrite) => {
 
   var _glBindBuffer = _emscripten_glBindBuffer;
 
+  var _glBindFramebuffer = _emscripten_glBindFramebuffer;
+
   var _glBindTexture = _emscripten_glBindTexture;
 
   var _glBlendFunc = _emscripten_glBlendFunc;
@@ -7550,6 +7550,8 @@ var stringToUTF8Array = (str, heap, outIdx, maxBytesToWrite) => {
   var _glBufferData = _emscripten_glBufferData;
 
   var _glBufferSubData = _emscripten_glBufferSubData;
+
+  var _glCheckFramebufferStatus = _emscripten_glCheckFramebufferStatus;
 
   var _glClear = _emscripten_glClear;
 
@@ -7593,9 +7595,13 @@ var stringToUTF8Array = (str, heap, outIdx, maxBytesToWrite) => {
 
   var _glEnableVertexAttribArray = _emscripten_glEnableVertexAttribArray;
 
+  var _glFramebufferTexture2D = _emscripten_glFramebufferTexture2D;
+
   var _glFrontFace = _emscripten_glFrontFace;
 
   var _glGenBuffers = _emscripten_glGenBuffers;
+
+  var _glGenFramebuffers = _emscripten_glGenFramebuffers;
 
   var _glGenTextures = _emscripten_glGenTextures;
 
@@ -9224,6 +9230,7 @@ var stringToUTF8Array = (str, heap, outIdx, maxBytesToWrite) => {
 
 
 
+
   var runAndAbortIfError = (func) => {
       try {
         return func();
@@ -10157,49 +10164,49 @@ function checkIncomingModuleAPI() {
   ignoredModuleProp('wasmBinary');
 }
 var ASM_CONSTS = {
-  110818: () => { if (document.fullscreenElement) return 1; },  
- 110864: () => { return Module.canvas.width; },  
- 110896: () => { return parseInt(Module.canvas.style.width); },  
- 110944: () => { document.exitFullscreen(); },  
- 110971: () => { setTimeout(function(){ Module.requestFullscreen(false, false); }, 100); },  
- 111043: () => { if (document.fullscreenElement) return 1; },  
- 111089: () => { return Module.canvas.width; },  
- 111121: () => { return screen.width; },  
- 111146: () => { document.exitFullscreen(); },  
- 111173: ($0) => { const canvasId = UTF8ToString($0); setTimeout(function() { Module.requestFullscreen(false, true); setTimeout(function() { document.querySelector(canvasId).style.width="unset"; }, 100); }, 100); },  
- 111367: () => { return window.innerWidth; },  
- 111393: () => { return window.innerHeight; },  
- 111420: () => { if (document.fullscreenElement) return 1; },  
- 111466: () => { return Module.canvas.width; },  
- 111498: () => { return parseInt(Module.canvas.style.width); },  
- 111546: () => { if (document.fullscreenElement) return 1; },  
- 111592: () => { return Module.canvas.width; },  
- 111624: () => { return screen.width; },  
- 111649: () => { return window.innerWidth; },  
- 111675: () => { return window.innerHeight; },  
- 111702: () => { if (document.fullscreenElement) return 1; },  
- 111748: () => { return Module.canvas.width; },  
- 111780: () => { return screen.width; },  
- 111805: () => { document.exitFullscreen(); },  
- 111832: () => { if (document.fullscreenElement) return 1; },  
- 111878: () => { return Module.canvas.width; },  
- 111910: () => { return parseInt(Module.canvas.style.width); },  
- 111958: () => { document.exitFullscreen(); },  
- 111985: ($0) => { Module.canvas.style.opacity = $0; },  
- 112023: () => { return screen.width; },  
- 112048: () => { return screen.height; },  
- 112074: () => { return window.screenX; },  
- 112101: () => { return window.screenY; },  
- 112128: () => { return window.devicePixelRatio; },  
- 112164: ($0) => { navigator.clipboard.writeText(UTF8ToString($0)); },  
- 112217: ($0) => { Module.canvas.style.cursor = UTF8ToString($0); },  
- 112268: () => { Module.canvas.style.cursor = 'none'; },  
- 112305: ($0, $1, $2, $3) => { try { navigator.getGamepads()[$0].vibrationActuator.playEffect('dual-rumble', { startDelay: 0, duration: $3, weakMagnitude: $1, strongMagnitude: $2 }); } catch (e) { try { navigator.getGamepads()[$0].hapticActuators[0].pulse($2, $3); } catch (e) { } } },  
- 112561: ($0) => { Module.canvas.style.cursor = UTF8ToString($0); },  
- 112612: () => { if (document.pointerLockElement) return 1; },  
- 112659: () => { if (document.fullscreenElement) return 1; },  
- 112705: () => { return window.innerWidth; },  
- 112731: () => { return window.innerHeight; }
+  112162: () => { if (document.fullscreenElement) return 1; },  
+ 112208: () => { return Module.canvas.width; },  
+ 112240: () => { return parseInt(Module.canvas.style.width); },  
+ 112288: () => { document.exitFullscreen(); },  
+ 112315: () => { setTimeout(function(){ Module.requestFullscreen(false, false); }, 100); },  
+ 112387: () => { if (document.fullscreenElement) return 1; },  
+ 112433: () => { return Module.canvas.width; },  
+ 112465: () => { return screen.width; },  
+ 112490: () => { document.exitFullscreen(); },  
+ 112517: ($0) => { const canvasId = UTF8ToString($0); setTimeout(function() { Module.requestFullscreen(false, true); setTimeout(function() { document.querySelector(canvasId).style.width="unset"; }, 100); }, 100); },  
+ 112711: () => { return window.innerWidth; },  
+ 112737: () => { return window.innerHeight; },  
+ 112764: () => { if (document.fullscreenElement) return 1; },  
+ 112810: () => { return Module.canvas.width; },  
+ 112842: () => { return parseInt(Module.canvas.style.width); },  
+ 112890: () => { if (document.fullscreenElement) return 1; },  
+ 112936: () => { return Module.canvas.width; },  
+ 112968: () => { return screen.width; },  
+ 112993: () => { return window.innerWidth; },  
+ 113019: () => { return window.innerHeight; },  
+ 113046: () => { if (document.fullscreenElement) return 1; },  
+ 113092: () => { return Module.canvas.width; },  
+ 113124: () => { return screen.width; },  
+ 113149: () => { document.exitFullscreen(); },  
+ 113176: () => { if (document.fullscreenElement) return 1; },  
+ 113222: () => { return Module.canvas.width; },  
+ 113254: () => { return parseInt(Module.canvas.style.width); },  
+ 113302: () => { document.exitFullscreen(); },  
+ 113329: ($0) => { Module.canvas.style.opacity = $0; },  
+ 113367: () => { return screen.width; },  
+ 113392: () => { return screen.height; },  
+ 113418: () => { return window.screenX; },  
+ 113445: () => { return window.screenY; },  
+ 113472: () => { return window.devicePixelRatio; },  
+ 113508: ($0) => { navigator.clipboard.writeText(UTF8ToString($0)); },  
+ 113561: ($0) => { Module.canvas.style.cursor = UTF8ToString($0); },  
+ 113612: () => { Module.canvas.style.cursor = 'none'; },  
+ 113649: ($0, $1, $2, $3) => { try { navigator.getGamepads()[$0].vibrationActuator.playEffect('dual-rumble', { startDelay: 0, duration: $3, weakMagnitude: $1, strongMagnitude: $2 }); } catch (e) { try { navigator.getGamepads()[$0].hapticActuators[0].pulse($2, $3); } catch (e) { } } },  
+ 113905: ($0) => { Module.canvas.style.cursor = UTF8ToString($0); },  
+ 113956: () => { if (document.pointerLockElement) return 1; },  
+ 114003: () => { if (document.fullscreenElement) return 1; },  
+ 114049: () => { return window.innerWidth; },  
+ 114075: () => { return window.innerHeight; }
 };
 function SetCanvasIdJs(out,outSize) { var canvasId = "#" + Module.canvas.id; stringToUTF8(canvasId, out, outSize); }
 function __asyncjs__RequestClipboardData() { return Asyncify.handleAsync(async () => { if (navigator.clipboard && window.isSecureContext) { let items = await navigator.clipboard.read(); for (const item of items) { if (item.types.includes("text/plain")) { const blob = await item.getType("text/plain"); const text = await blob.text(); window._lastClipboardString = text; } else if (item.types.find(t => t.startsWith("image/"))) { const blob = await item.getType(item.types.find(t => t.startsWith("image/"))); const bitmap = await createImageBitmap(blob); const canvas = document.createElement('canvas'); canvas.width = bitmap.width; canvas.height = bitmap.height; const ctx = canvas.getContext('2d'); ctx.drawImage(bitmap, 0, 0); const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data; window._lastImgWidth = canvas.width; window._lastImgHeight = canvas.height; window._lastImgData = imgData; } } } else console.warn("Clipboard read() requires HTTPS/Localhost"); }); }
@@ -10365,6 +10372,8 @@ var wasmImports = {
   /** @export */
   __assert_fail: ___assert_fail,
   /** @export */
+  __call_sighandler: ___call_sighandler,
+  /** @export */
   __syscall_chdir: ___syscall_chdir,
   /** @export */
   __syscall_faccessat: ___syscall_faccessat,
@@ -10379,6 +10388,8 @@ var wasmImports = {
   /** @export */
   _abort_js: __abort_js,
   /** @export */
+  _emscripten_runtime_keepalive_clear: __emscripten_runtime_keepalive_clear,
+  /** @export */
   clock_time_get: _clock_time_get,
   /** @export */
   emscripten_asm_const_double: _emscripten_asm_const_double,
@@ -10386,8 +10397,6 @@ var wasmImports = {
   emscripten_asm_const_int: _emscripten_asm_const_int,
   /** @export */
   emscripten_date_now: _emscripten_date_now,
-  /** @export */
-  emscripten_exit_pointerlock: _emscripten_exit_pointerlock,
   /** @export */
   emscripten_get_element_css_size: _emscripten_get_element_css_size,
   /** @export */
@@ -10783,6 +10792,8 @@ var wasmImports = {
   /** @export */
   glBindBuffer: _glBindBuffer,
   /** @export */
+  glBindFramebuffer: _glBindFramebuffer,
+  /** @export */
   glBindTexture: _glBindTexture,
   /** @export */
   glBlendFunc: _glBlendFunc,
@@ -10790,6 +10801,8 @@ var wasmImports = {
   glBufferData: _glBufferData,
   /** @export */
   glBufferSubData: _glBufferSubData,
+  /** @export */
+  glCheckFramebufferStatus: _glCheckFramebufferStatus,
   /** @export */
   glClear: _glClear,
   /** @export */
@@ -10833,9 +10846,13 @@ var wasmImports = {
   /** @export */
   glEnableVertexAttribArray: _glEnableVertexAttribArray,
   /** @export */
+  glFramebufferTexture2D: _glFramebufferTexture2D,
+  /** @export */
   glFrontFace: _glFrontFace,
   /** @export */
   glGenBuffers: _glGenBuffers,
+  /** @export */
+  glGenFramebuffers: _glGenFramebuffers,
   /** @export */
   glGenTextures: _glGenTextures,
   /** @export */
@@ -10953,7 +10970,9 @@ var wasmImports = {
   /** @export */
   glfwTerminate: _glfwTerminate,
   /** @export */
-  glfwWindowHint: _glfwWindowHint
+  glfwWindowHint: _glfwWindowHint,
+  /** @export */
+  proc_exit: _proc_exit
 };
 
 
