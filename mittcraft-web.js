@@ -76,7 +76,7 @@ var ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIR
 
 // --pre-jses are emitted after the Module integration code, so that they can
 // refer to Module (if they choose; they can also define Module)
-// include: /tmp/tmpxn_e3ee9.js
+// include: /tmp/tmphl5nbz8v.js
 
   if (!Module['expectedDataFileDownloads']) Module['expectedDataFileDownloads'] = 0;
   Module['expectedDataFileDownloads']++;
@@ -199,25 +199,25 @@ var ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIR
     }
 
     }
-    loadPackage({"files": [{"filename": "/block_shader.fs", "start": 0, "end": 3908}, {"filename": "/block_shader.vs", "start": 3908, "end": 4936}, {"filename": "/blocks.bmp", "start": 4936, "end": 70610}, {"filename": "/depth_shader.fs", "start": 70610, "end": 71200}, {"filename": "/depth_shader.vs", "start": 71200, "end": 71466}, {"filename": "/gui-spritesheet.bmp", "start": 71466, "end": 792168}, {"filename": "/items.bmp", "start": 792168, "end": 857842}, {"filename": "/skybox.bmp", "start": 857842, "end": 1817980}, {"filename": "/skybox.fs", "start": 1817980, "end": 1818401}, {"filename": "/skybox.vs", "start": 1818401, "end": 1818966}, {"filename": "/uv-layout.png", "start": 1818966, "end": 1819514}, {"filename": "/zombie.glb", "start": 1819514, "end": 1845374}], "remote_package_size": 1845374});
+    loadPackage({"files": [{"filename": "/block_shader.fs", "start": 0, "end": 4309}, {"filename": "/block_shader.vs", "start": 4309, "end": 5540}, {"filename": "/blocks.bmp", "start": 5540, "end": 71214}, {"filename": "/depth_shader.fs", "start": 71214, "end": 71804}, {"filename": "/depth_shader.vs", "start": 71804, "end": 72070}, {"filename": "/dir_depth.fs", "start": 72070, "end": 72591}, {"filename": "/dir_depth.vs", "start": 72591, "end": 73051}, {"filename": "/gui-spritesheet.bmp", "start": 73051, "end": 793753}, {"filename": "/items.bmp", "start": 793753, "end": 859427}, {"filename": "/skybox.bmp", "start": 859427, "end": 1819565}, {"filename": "/skybox.fs", "start": 1819565, "end": 1819986}, {"filename": "/skybox.vs", "start": 1819986, "end": 1820551}, {"filename": "/uv-layout.png", "start": 1820551, "end": 1821099}, {"filename": "/zombie.glb", "start": 1821099, "end": 1846959}], "remote_package_size": 1846959});
 
   })();
 
-// end include: /tmp/tmpxn_e3ee9.js
-// include: /tmp/tmpq8tedyu9.js
+// end include: /tmp/tmphl5nbz8v.js
+// include: /tmp/tmpuqnb6i9y.js
 
     // All the pre-js content up to here must remain later on, we need to run
     // it.
     if ((typeof ENVIRONMENT_IS_WASM_WORKER != 'undefined' && ENVIRONMENT_IS_WASM_WORKER) || (typeof ENVIRONMENT_IS_PTHREAD != 'undefined' && ENVIRONMENT_IS_PTHREAD) || (typeof ENVIRONMENT_IS_AUDIO_WORKLET != 'undefined' && ENVIRONMENT_IS_AUDIO_WORKLET)) Module['preRun'] = [];
     var necessaryPreJSTasks = Module['preRun'].slice();
-  // end include: /tmp/tmpq8tedyu9.js
-// include: /tmp/tmpq1k1dheu.js
+  // end include: /tmp/tmpuqnb6i9y.js
+// include: /tmp/tmp1nu78342.js
 
     if (!Module['preRun']) throw 'Module.preRun should exist because file support used it; did a pre-js delete it?';
     necessaryPreJSTasks.forEach((task) => {
       if (Module['preRun'].indexOf(task) < 0) throw 'All preRun tasks that exist before user pre-js code should remain after; did you replace Module or modify Module.preRun?';
     });
-  // end include: /tmp/tmpq1k1dheu.js
+  // end include: /tmp/tmp1nu78342.js
 
 
 var programArgs = [];
@@ -7543,6 +7543,8 @@ var stringToUTF8Array = (str, heap, outIdx, maxBytesToWrite) => {
 
   var _glBindFramebuffer = _emscripten_glBindFramebuffer;
 
+  var _glBindRenderbuffer = _emscripten_glBindRenderbuffer;
+
   var _glBindTexture = _emscripten_glBindTexture;
 
   var _glBlendFunc = _emscripten_glBlendFunc;
@@ -7595,6 +7597,8 @@ var stringToUTF8Array = (str, heap, outIdx, maxBytesToWrite) => {
 
   var _glEnableVertexAttribArray = _emscripten_glEnableVertexAttribArray;
 
+  var _glFramebufferRenderbuffer = _emscripten_glFramebufferRenderbuffer;
+
   var _glFramebufferTexture2D = _emscripten_glFramebufferTexture2D;
 
   var _glFrontFace = _emscripten_glFrontFace;
@@ -7602,6 +7606,8 @@ var stringToUTF8Array = (str, heap, outIdx, maxBytesToWrite) => {
   var _glGenBuffers = _emscripten_glGenBuffers;
 
   var _glGenFramebuffers = _emscripten_glGenFramebuffers;
+
+  var _glGenRenderbuffers = _emscripten_glGenRenderbuffers;
 
   var _glGenTextures = _emscripten_glGenTextures;
 
@@ -7626,6 +7632,8 @@ var stringToUTF8Array = (str, heap, outIdx, maxBytesToWrite) => {
   var _glPixelStorei = _emscripten_glPixelStorei;
 
   var _glReadPixels = _emscripten_glReadPixels;
+
+  var _glRenderbufferStorage = _emscripten_glRenderbufferStorage;
 
   var _glShaderSource = _emscripten_glShaderSource;
 
@@ -10164,49 +10172,49 @@ function checkIncomingModuleAPI() {
   ignoredModuleProp('wasmBinary');
 }
 var ASM_CONSTS = {
-  112162: () => { if (document.fullscreenElement) return 1; },  
- 112208: () => { return Module.canvas.width; },  
- 112240: () => { return parseInt(Module.canvas.style.width); },  
- 112288: () => { document.exitFullscreen(); },  
- 112315: () => { setTimeout(function(){ Module.requestFullscreen(false, false); }, 100); },  
- 112387: () => { if (document.fullscreenElement) return 1; },  
- 112433: () => { return Module.canvas.width; },  
- 112465: () => { return screen.width; },  
- 112490: () => { document.exitFullscreen(); },  
- 112517: ($0) => { const canvasId = UTF8ToString($0); setTimeout(function() { Module.requestFullscreen(false, true); setTimeout(function() { document.querySelector(canvasId).style.width="unset"; }, 100); }, 100); },  
- 112711: () => { return window.innerWidth; },  
- 112737: () => { return window.innerHeight; },  
- 112764: () => { if (document.fullscreenElement) return 1; },  
- 112810: () => { return Module.canvas.width; },  
- 112842: () => { return parseInt(Module.canvas.style.width); },  
- 112890: () => { if (document.fullscreenElement) return 1; },  
- 112936: () => { return Module.canvas.width; },  
- 112968: () => { return screen.width; },  
- 112993: () => { return window.innerWidth; },  
- 113019: () => { return window.innerHeight; },  
- 113046: () => { if (document.fullscreenElement) return 1; },  
- 113092: () => { return Module.canvas.width; },  
- 113124: () => { return screen.width; },  
- 113149: () => { document.exitFullscreen(); },  
- 113176: () => { if (document.fullscreenElement) return 1; },  
- 113222: () => { return Module.canvas.width; },  
- 113254: () => { return parseInt(Module.canvas.style.width); },  
- 113302: () => { document.exitFullscreen(); },  
- 113329: ($0) => { Module.canvas.style.opacity = $0; },  
- 113367: () => { return screen.width; },  
- 113392: () => { return screen.height; },  
- 113418: () => { return window.screenX; },  
- 113445: () => { return window.screenY; },  
- 113472: () => { return window.devicePixelRatio; },  
- 113508: ($0) => { navigator.clipboard.writeText(UTF8ToString($0)); },  
- 113561: ($0) => { Module.canvas.style.cursor = UTF8ToString($0); },  
- 113612: () => { Module.canvas.style.cursor = 'none'; },  
- 113649: ($0, $1, $2, $3) => { try { navigator.getGamepads()[$0].vibrationActuator.playEffect('dual-rumble', { startDelay: 0, duration: $3, weakMagnitude: $1, strongMagnitude: $2 }); } catch (e) { try { navigator.getGamepads()[$0].hapticActuators[0].pulse($2, $3); } catch (e) { } } },  
- 113905: ($0) => { Module.canvas.style.cursor = UTF8ToString($0); },  
- 113956: () => { if (document.pointerLockElement) return 1; },  
- 114003: () => { if (document.fullscreenElement) return 1; },  
- 114049: () => { return window.innerWidth; },  
- 114075: () => { return window.innerHeight; }
+  112626: () => { if (document.fullscreenElement) return 1; },  
+ 112672: () => { return Module.canvas.width; },  
+ 112704: () => { return parseInt(Module.canvas.style.width); },  
+ 112752: () => { document.exitFullscreen(); },  
+ 112779: () => { setTimeout(function(){ Module.requestFullscreen(false, false); }, 100); },  
+ 112851: () => { if (document.fullscreenElement) return 1; },  
+ 112897: () => { return Module.canvas.width; },  
+ 112929: () => { return screen.width; },  
+ 112954: () => { document.exitFullscreen(); },  
+ 112981: ($0) => { const canvasId = UTF8ToString($0); setTimeout(function() { Module.requestFullscreen(false, true); setTimeout(function() { document.querySelector(canvasId).style.width="unset"; }, 100); }, 100); },  
+ 113175: () => { return window.innerWidth; },  
+ 113201: () => { return window.innerHeight; },  
+ 113228: () => { if (document.fullscreenElement) return 1; },  
+ 113274: () => { return Module.canvas.width; },  
+ 113306: () => { return parseInt(Module.canvas.style.width); },  
+ 113354: () => { if (document.fullscreenElement) return 1; },  
+ 113400: () => { return Module.canvas.width; },  
+ 113432: () => { return screen.width; },  
+ 113457: () => { return window.innerWidth; },  
+ 113483: () => { return window.innerHeight; },  
+ 113510: () => { if (document.fullscreenElement) return 1; },  
+ 113556: () => { return Module.canvas.width; },  
+ 113588: () => { return screen.width; },  
+ 113613: () => { document.exitFullscreen(); },  
+ 113640: () => { if (document.fullscreenElement) return 1; },  
+ 113686: () => { return Module.canvas.width; },  
+ 113718: () => { return parseInt(Module.canvas.style.width); },  
+ 113766: () => { document.exitFullscreen(); },  
+ 113793: ($0) => { Module.canvas.style.opacity = $0; },  
+ 113831: () => { return screen.width; },  
+ 113856: () => { return screen.height; },  
+ 113882: () => { return window.screenX; },  
+ 113909: () => { return window.screenY; },  
+ 113936: () => { return window.devicePixelRatio; },  
+ 113972: ($0) => { navigator.clipboard.writeText(UTF8ToString($0)); },  
+ 114025: ($0) => { Module.canvas.style.cursor = UTF8ToString($0); },  
+ 114076: () => { Module.canvas.style.cursor = 'none'; },  
+ 114113: ($0, $1, $2, $3) => { try { navigator.getGamepads()[$0].vibrationActuator.playEffect('dual-rumble', { startDelay: 0, duration: $3, weakMagnitude: $1, strongMagnitude: $2 }); } catch (e) { try { navigator.getGamepads()[$0].hapticActuators[0].pulse($2, $3); } catch (e) { } } },  
+ 114369: ($0) => { Module.canvas.style.cursor = UTF8ToString($0); },  
+ 114420: () => { if (document.pointerLockElement) return 1; },  
+ 114467: () => { if (document.fullscreenElement) return 1; },  
+ 114513: () => { return window.innerWidth; },  
+ 114539: () => { return window.innerHeight; }
 };
 function SetCanvasIdJs(out,outSize) { var canvasId = "#" + Module.canvas.id; stringToUTF8(canvasId, out, outSize); }
 function __asyncjs__RequestClipboardData() { return Asyncify.handleAsync(async () => { if (navigator.clipboard && window.isSecureContext) { let items = await navigator.clipboard.read(); for (const item of items) { if (item.types.includes("text/plain")) { const blob = await item.getType("text/plain"); const text = await blob.text(); window._lastClipboardString = text; } else if (item.types.find(t => t.startsWith("image/"))) { const blob = await item.getType(item.types.find(t => t.startsWith("image/"))); const bitmap = await createImageBitmap(blob); const canvas = document.createElement('canvas'); canvas.width = bitmap.width; canvas.height = bitmap.height; const ctx = canvas.getContext('2d'); ctx.drawImage(bitmap, 0, 0); const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data; window._lastImgWidth = canvas.width; window._lastImgHeight = canvas.height; window._lastImgData = imgData; } } } else console.warn("Clipboard read() requires HTTPS/Localhost"); }); }
@@ -10794,6 +10802,8 @@ var wasmImports = {
   /** @export */
   glBindFramebuffer: _glBindFramebuffer,
   /** @export */
+  glBindRenderbuffer: _glBindRenderbuffer,
+  /** @export */
   glBindTexture: _glBindTexture,
   /** @export */
   glBlendFunc: _glBlendFunc,
@@ -10846,6 +10856,8 @@ var wasmImports = {
   /** @export */
   glEnableVertexAttribArray: _glEnableVertexAttribArray,
   /** @export */
+  glFramebufferRenderbuffer: _glFramebufferRenderbuffer,
+  /** @export */
   glFramebufferTexture2D: _glFramebufferTexture2D,
   /** @export */
   glFrontFace: _glFrontFace,
@@ -10853,6 +10865,8 @@ var wasmImports = {
   glGenBuffers: _glGenBuffers,
   /** @export */
   glGenFramebuffers: _glGenFramebuffers,
+  /** @export */
+  glGenRenderbuffers: _glGenRenderbuffers,
   /** @export */
   glGenTextures: _glGenTextures,
   /** @export */
@@ -10877,6 +10891,8 @@ var wasmImports = {
   glPixelStorei: _glPixelStorei,
   /** @export */
   glReadPixels: _glReadPixels,
+  /** @export */
+  glRenderbufferStorage: _glRenderbufferStorage,
   /** @export */
   glShaderSource: _glShaderSource,
   /** @export */
